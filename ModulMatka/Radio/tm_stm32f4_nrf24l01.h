@@ -28,7 +28,7 @@
 @endverbatim
  */
 #ifndef TM_NRF24L01_H
-#define TM_NRF24L01_H 111
+#define TM_NRF24L01_H 1
 
 /* C++ detection */
 #ifdef __cplusplus

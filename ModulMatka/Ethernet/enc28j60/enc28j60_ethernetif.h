@@ -1,5 +1,4 @@
-#ifndef ETHERNETIF_H_
-#define ETHERNETIF_H_
+
 
 /**
  * @file
@@ -38,6 +37,11 @@
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
+
+#ifndef ETHERNETIF_H_
+#define ETHERNETIF_H_
+
+
 #include "lwip/opt.h"
 #include "lwip/def.h"
 #include "lwip/mem.h"
@@ -48,21 +52,22 @@
 #include "lwip/etharp.h"
 #include "netif/ppp/pppoe.h"
 
+#include <stm32f4xx_hal.h>
+#include "main.h"
 #include "enc28j60.h"
 /* Define those to better describe your network interface. */
 #define IFNAME0 'e'
 #define IFNAME1 'n'
 
-///
- /* Helper struct to hold private data used to operate your ethernet interface.
- * Keeping the ethernet address of the MAC in this struct is not necessary
- * as it is already kept in the struct netif.
- * But this is only an example, anyway...
- */
-//struct ethernetif {
-//	struct eth_addr *ethaddr;
-/* Add whatever per-interface state that is needed here. */
-//};
+
+extern SPI_HandleTypeDef hspi1;
+
+#define ENC28J60_SPI				&hspi1
+
+#define ENC28J60_CS_PORT			ETH_CS_GPIO_Port
+#define ENC28J60_CS_PIN				ETH_CS_Pin
+
+
 
 /**
  * This function should be called when a packet is ready to be read
@@ -87,7 +92,7 @@ void ethernetif_input(struct netif *netif);
  *         ERR_MEM if private data couldn't be allocated
  *         any other err_t on error
  */
-err_t ethernetif_init(struct netif *netif);
+err_t enc28j60_netif_init(struct netif *netif);
 
 
 #endif /* ETHERNETIF_H_ */

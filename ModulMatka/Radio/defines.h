@@ -9,14 +9,13 @@
 #define DEFINES_H_
 
 #include "stm32f4xx_hal.h"
-#include "../Inc/main.h"
+#include "main.h"
 
 #define Bit_RESET 		0
 
-extern SPI_HandleTypeDef hspi1;
+extern SPI_HandleTypeDef hspi2;
 
-#define NRF24L01_SPI				&hspi1
-#define NRF24L01_SPI_PINS
+#define NRF24L01_SPI				&hspi2
 
 #define NRF24L01_CSN_PORT			RADIO_CS_GPIO_Port
 #define NRF24L01_CSN_PIN			RADIO_CS_Pin

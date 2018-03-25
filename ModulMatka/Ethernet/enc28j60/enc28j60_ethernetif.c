@@ -36,12 +36,9 @@
  *
  */
 
-#include "ethernetif.h"
+#include <enc28j60_ethernetif.h>
 #include <string.h>
 static void low_level_init(struct netif *netif) {
-//	struct ethernetif *ethernetif = netif->state;
-
-	/* set MAC hardware address length */
 	netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
 	/* set MAC hardware address */
@@ -60,7 +57,8 @@ static void low_level_init(struct netif *netif) {
 	netif->flags =
 	NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 
-	/* Initialize ecn28j60. */
+	/* Initialize enc28j60. */
+	enc28j60Init(ENC28J60_SPI, ENC28J60_CS_PORT, ENC28J60_CS_PIN);
 }
 
 /**
@@ -80,7 +78,6 @@ static void low_level_init(struct netif *netif) {
  */
 
 static err_t low_level_output(struct netif *netif, struct pbuf *p) {
-//	struct ethernetif *ethernetif = netif->state;
 	struct pbuf *q;
 
 	for (q = p; q != NULL; q = q->next) {
@@ -102,7 +99,6 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p) {
  */
 static struct pbuf *
 low_level_input(struct netif *netif) {
-//	struct ethernetif *ethernetif = netif->state;
 	struct pbuf *p, *q;
 	u16_t len;
 	uint8_t buffer[MAX_FRAMELEN];
@@ -134,12 +130,7 @@ low_level_input(struct netif *netif) {
  * @param netif the lwip network interface structure for this ethernetif
  */
 void ethernetif_input(struct netif *netif) {
-//	struct ethernetif *ethernetif;
-//	struct eth_hdr *ethhdr;
 	struct pbuf *p;
-
-//	ethernetif = netif->state;
-
 	/* move received packet into a new pbuf */
 	p = low_level_input(netif);
 	/* if no packet could be read, silently ignore this */
@@ -165,17 +156,7 @@ void ethernetif_input(struct netif *netif) {
  *         ERR_MEM if private data couldn't be allocated
  *         any other err_t on error
  */
-err_t ethernetif_init(struct netif *netif) {
-//	struct ethernetif *ethernetif;
-
-	LWIP_ASSERT("netif != NULL", (netif != NULL));
-
-//	ethernetif = mem_malloc(sizeof(struct ethernetif));
-//	if (ethernetif == NULL) {
-//		LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_init: out of memory\n"));
-//		return ERR_MEM;
-//	}
-//	netif->state = ethernetif;
+err_t enc28j60_netif_init(struct netif *netif) {
 	netif->name[0] = IFNAME0;
 	netif->name[1] = IFNAME1;
 	/* We directly use etharp_output() here to save a function call.
@@ -185,9 +166,6 @@ err_t ethernetif_init(struct netif *netif) {
 	netif->output = etharp_output;
 	netif->linkoutput = low_level_output;
 
-//	ethernetif->ethaddr = (struct eth_addr *) &(netif->hwaddr[0]);
-
-	/* initialize the hardware */
 	low_level_init(netif);
 
 	return ERR_OK;

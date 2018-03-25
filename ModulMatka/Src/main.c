@@ -105,7 +105,7 @@ int main(void) {
 	MX_USART2_UART_Init();
 	/* USER CODE BEGIN 2 */
 
-	enc28j60Init(&hspi1, ETH_CS_GPIO_Port, ETH_CS_Pin);
+//	enc28j60Init(&hspi1, ETH_CS_GPIO_Port, ETH_CS_Pin);
 
 #if TCP_ECHO_SERVER
 	tcpecho_raw_init();

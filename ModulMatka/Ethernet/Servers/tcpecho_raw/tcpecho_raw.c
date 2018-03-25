@@ -47,7 +47,7 @@
 #include "tcpecho_raw.h"
 
 #include "netif/etharp.h"
-#include "../enc28j60/ethernetif.h"
+#include "enc28j60_ethernetif.h"
 #include "lwip/init.h"
 
 #if LWIP_TCP
@@ -274,7 +274,7 @@ void tcpecho_raw_init(void) {
 
 	uint16_t port = 8080;
 	lwip_init();
-	netif_add(&networkInterface, &myIp, &netmask, &gw, NULL, ethernetif_init,
+	netif_add(&networkInterface, &myIp, &netmask, &gw, NULL, enc28j60_netif_init,
 			ethernet_input);
 	netif_set_up(&networkInterface);
 	tcpecho_raw_pcb = tcp_new();

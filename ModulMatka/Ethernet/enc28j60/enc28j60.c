@@ -7,7 +7,7 @@
 
 #include "enc28j60.h"
 
-static Enc28j60SPI enc28j60spi;
+Enc28j60SPI enc28j60spi;
 
 void getMACAddress(uint8_t* macAddress) {
 	macAddress[0] = MACADDRESS1;
@@ -56,13 +56,8 @@ void enc28j60Init(SPI_HandleTypeDef* hspi, GPIO_TypeDef* chipSelectPort,
 	enc28j60CtrlRegWrite(ETXNDL, TXSTOP_INIT & 0xFF);
 	enc28j60CtrlRegWrite(ETXNDH, TXSTOP_INIT >> 8);
 
-	//disable all filters
-	enc28j60CtrlRegWrite(ERXFCON, 0);
-//	enc28j60CtrlRegWrite(ERXFCON, ERXFCON_UCEN | ERXFCON_CRCEN | ERXFCON_PMEN);
-//	enc28j60CtrlRegWrite(EPMM0, 0x3f);
-//	enc28j60CtrlRegWrite(EPMM1, 0x30);
-//	enc28j60CtrlRegWrite(EPMCSL, 0xf9);
-//	enc28j60CtrlRegWrite(EPMCSH, 0xf7);
+	//enable filters
+	enc28j60CtrlRegWrite(ERXFCON, ERXFCON_UCEN | ERXFCON_BCEN);
 
 	// enable MAC receive
 	enc28j60CtrlRegWrite(MACON1, MACON1_MARXEN | MACON1_TXPAUS | MACON1_RXPAUS);
@@ -81,12 +76,19 @@ void enc28j60Init(SPI_HandleTypeDef* hspi, GPIO_TypeDef* chipSelectPort,
 	// do bank 3 stuff
 	// write MAC address
 	// NOTE: MAC address in ENC28J60 is byte-backward
-	enc28j60CtrlRegWrite(MAADR6, MACADDRESS1);
-	enc28j60CtrlRegWrite(MAADR5, MACADDRESS2);
-	enc28j60CtrlRegWrite(MAADR4, MACADDRESS3);
-	enc28j60CtrlRegWrite(MAADR3, MACADDRESS4);
-	enc28j60CtrlRegWrite(MAADR2, MACADDRESS5);
-	enc28j60CtrlRegWrite(MAADR1, MACADDRESS6);
+	enc28j60CtrlRegWrite(MAADR6, MACADDRESS6);
+	enc28j60CtrlRegWrite(MAADR5, MACADDRESS5);
+	enc28j60CtrlRegWrite(MAADR4, MACADDRESS4);
+	enc28j60CtrlRegWrite(MAADR3, MACADDRESS3);
+	enc28j60CtrlRegWrite(MAADR2, MACADDRESS2);
+	enc28j60CtrlRegWrite(MAADR1, MACADDRESS1);
+
+	printf("%d\n", enc28j60CtrlRegRead(MAADR6));
+	printf("%d\n", enc28j60CtrlRegRead(MAADR5));
+	printf("%d\n", enc28j60CtrlRegRead(MAADR4));
+	printf("%d\n", enc28j60CtrlRegRead(MAADR3));
+	printf("%d\n", enc28j60CtrlRegRead(MAADR2));
+	printf("%d\n", enc28j60CtrlRegRead(MAADR1));
 
 	// no loopback of transmitted frames
 	enc28j60PHYWrite(PHCON2, PHCON2_HDLDIS);

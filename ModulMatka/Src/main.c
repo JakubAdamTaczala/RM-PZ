@@ -61,10 +61,6 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
-int _write(int file, char * ptr, int len) {
-	HAL_UART_Transmit(&huart2, (uint8_t*) ptr, len, 50);
-	return len;
-}
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */

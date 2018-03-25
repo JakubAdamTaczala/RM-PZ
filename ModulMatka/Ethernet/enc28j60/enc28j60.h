@@ -115,12 +115,12 @@
 #define MIRDH            (0x19|BANK2|DUMMY)
 
 // Bank 3 registers ??
-#define MAADR1           (0x00|BANK3|DUMMY)
-#define MAADR2           (0x01|BANK3|DUMMY)
+#define MAADR5           (0x00|BANK3|DUMMY)
+#define MAADR6           (0x01|BANK3|DUMMY)
 #define MAADR3           (0x02|BANK3|DUMMY)
 #define MAADR4           (0x03|BANK3|DUMMY)
-#define MAADR5           (0x04|BANK3|DUMMY)
-#define MAADR6           (0x05|BANK3|DUMMY)
+#define MAADR1           (0x04|BANK3|DUMMY)
+#define MAADR2           (0x05|BANK3|DUMMY)
 #define EBSTSD           (0x06|BANK3)
 #define EBSTCON          (0x07|BANK3)
 #define EBSTCSL          (0x08|BANK3)

@@ -38,6 +38,9 @@
 
 #include <enc28j60_ethernetif.h>
 #include <string.h>
+
+extern Enc28j60SPI enc28j60spi;
+
 static void low_level_init(struct netif *netif) {
 	netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
@@ -80,12 +83,39 @@ static void low_level_init(struct netif *netif) {
 static err_t low_level_output(struct netif *netif, struct pbuf *p) {
 	struct pbuf *q;
 
+	printf("out fun\n");
+	while (enc28j60ReadOp(ENC28J60_READ_CTRL_REG, ECON1) & ECON1_TXRTS) {
+		// Reset the transmit logic problem. See Rev. B4 Silicon Errata point 12.
+		if ((enc28j60CtrlRegRead(EIR) & EIR_TXERIF)) {
+			enc28j60WriteOp(ENC28J60_BIT_FIELD_SET, ECON1, ECON1_TXRST);
+			enc28j60WriteOp(ENC28J60_BIT_FIELD_CLR, ECON1, ECON1_TXRST);
+		}
+	}
+
+	printf("Writing len=%d\n", p->tot_len);
+
+	// Initialize transmit pointer
+	enc28j60CtrlRegWrite(EWRPTL, TXSTART_INIT & 0xFF);
+	enc28j60CtrlRegWrite(EWRPTH, TXSTART_INIT >> 8);
+
+	// Initialize transmit buffor end to correspond with packet length
+	enc28j60CtrlRegWrite(ETXNDL, (TXSTART_INIT + p->tot_len + 1) & 0xFF);
+	enc28j60CtrlRegWrite(ETXNDH, (TXSTART_INIT + p->tot_len + 1) >> 8);
+
+	// write per-packet control byte (0x00 means use macon3 settings)
+	enc28j60WriteOp(ENC28J60_WRITE_BUF_MEM, 0, 0x00);
+
 	for (q = p; q != NULL; q = q->next) {
 		/* Send the data from the pbuf to the interface, one pbuf at a
 		 time. The size of the data in each pbuf is kept in the ->len
 		 variable. */
-		enc28j60SendPacket(q->payload, q->len);
+		// Write data to buffor
+		enc28j60WriteBuffer(q->payload, q->len);
+		printf("writing\n");
 	}
+
+	printf("send\n");
+	enc28j60WriteOp(ENC28J60_BIT_FIELD_SET, ECON1, ECON1_TXRTS);
 	return ERR_OK;
 }
 
@@ -99,25 +129,75 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p) {
  */
 static struct pbuf *
 low_level_input(struct netif *netif) {
-	struct pbuf *p, *q;
-	u16_t len;
-	uint8_t buffer[MAX_FRAMELEN];
-	uint32_t bufferoffset = 0;
-	len = enc28j60ReceivePacket(buffer, MAX_FRAMELEN);
-	if (len <= 0) {
-		return NULL;
-	}
-	p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
 
-	if (p != NULL) {
-		for (q = p; q != NULL; q = q->next) {
-			memcpy((uint8_t*) ((uint8_t*) q->payload),
-					(uint8_t*) ((uint8_t*) buffer + bufferoffset), q->len);
-			bufferoffset = bufferoffset + q->len;
-		}
-		return p;
+	// check if a packet has been received and buffered
+	//if( !(enc28j60Read(EIR) & EIR_PKTIF) ){
+	// The above does not work. See Rev. B4 Silicon Errata point 6.
+	if (enc28j60CtrlRegRead(EPKTCNT) == 0) {
+		return (0);
 	}
-	return NULL;
+
+	//clear EIR_PKTIF bit, to receive next interrupt
+	enc28j60WriteOp(ENC28J60_BIT_FIELD_CLR, EIR, EIR_PKTIF);
+	//clear EIE_INTIE bit, to reset interrupts (~INT goes up)
+	enc28j60WriteOp(ENC28J60_BIT_FIELD_CLR, EIE, EIE_INTIE);
+
+	// Set the read pointer to the start of the received packet
+	enc28j60CtrlRegWrite(ERDPTL, (enc28j60spi.nextPacketPointer));
+	enc28j60CtrlRegWrite(ERDPTH, (enc28j60spi.nextPacketPointer) >> 8);
+
+	// read the next packet pointer
+	enc28j60spi.nextPacketPointer = enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0);
+	enc28j60spi.nextPacketPointer |= (enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0)
+			<< 8);
+
+	uint16_t len;
+	uint16_t rxstat;
+	// read the packet length (see datasheet page 43)
+	len = enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0);
+	len |= enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0) << 8;
+
+	printf("len=%d\n", len);
+
+	struct pbuf *p, *q;
+
+	len -= 4; //remove the CRC count
+	// read the receive status (see datasheet page 43)
+	rxstat = enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0);
+	rxstat |= (enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0) << 8);
+	// limit retrieve length
+	if (len > MAX_FRAMELEN - 1) {
+		len = MAX_FRAMELEN - 1;
+	}
+
+	// check CRC and symbol errors (see datasheet page 44, table 7-3):
+	// The ERXFCON.CRCEN is set by default. Normally we should not
+	// need to check this.
+	if ((rxstat & 0x80) == 0) {
+		// invalid
+		len = 0;
+	} else {
+
+		p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
+		if (p != NULL) {
+			for (q = p; q != NULL; q = q->next) {
+				// copy the packet from the receive buffer
+				enc28j60ReadBuffer(q->payload, q->len);
+			}
+		}
+	}
+	// Move the RX read pointer to the start of the next received packet
+	// This frees the memory we just read out
+	enc28j60CtrlRegWrite(ERXRDPTL, (enc28j60spi.nextPacketPointer));
+	enc28j60CtrlRegWrite(ERXRDPTH, (enc28j60spi.nextPacketPointer) >> 8);
+
+	// decrement the packet counter indicate we are done with this packet
+	enc28j60WriteOp(ENC28J60_BIT_FIELD_SET, ECON2, ECON2_PKTDEC);
+
+	//set EIE_INITE bit, to set receive next interrupt
+	enc28j60WriteOp(ENC28J60_BIT_FIELD_SET, EIE, EIE_INTIE);
+
+	return p;
 }
 
 /**

@@ -64,10 +64,8 @@ void enc28j60Init(SPI_HandleTypeDef* hspi, GPIO_TypeDef* chipSelectPort,
 //	enc28j60CtrlRegWrite(EPMCSL, 0xf9);
 //	enc28j60CtrlRegWrite(EPMCSH, 0xf7);
 
-// enable MAC receive
+	// enable MAC receive
 	enc28j60CtrlRegWrite(MACON1, MACON1_MARXEN | MACON1_TXPAUS | MACON1_RXPAUS);
-	// bring MAC out of reset
-//	enc28j60Write(MACON2, 0x00);
 	// enable automatic padding to 60bytes and CRC operations
 	enc28j60WriteOp(ENC28J60_BIT_FIELD_SET, MACON3,
 	MACON3_PADCFG0 | MACON3_TXCRCEN | MACON3_FRMLNEN);
@@ -258,7 +256,6 @@ uint16_t enc28j60ReceivePacket(uint8_t* packet, uint16_t maxlen) {
 	enc28j60WriteOp(ENC28J60_BIT_FIELD_CLR, EIR, EIR_PKTIF);
 	//clear EIE_INTIE bit, to reset interrupts (~INT goes up)
 	enc28j60WriteOp(ENC28J60_BIT_FIELD_CLR, EIE, EIE_INTIE);
-
 
 	// Set the read pointer to the start of the received packet
 	enc28j60CtrlRegWrite(ERDPTL, (enc28j60spi.nextPacketPointer));

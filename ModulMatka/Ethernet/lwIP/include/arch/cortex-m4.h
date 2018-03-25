@@ -3,10 +3,10 @@
 #include <stm32f4xx.h>
 #include <stdlib.h>
 
-/**
- * Definition of byte order in STM32
- */
-#define BYTE_ORDER LITTLE_ENDIAN
+///**
+// * Definition of byte order in STM32
+// */
+//#define BYTE_ORDER LITTLE_ENDIAN
 
 /**
  * Definitions of integral types used in lwIP stack
@@ -58,19 +58,17 @@ typedef u32_t    mem_ptr_t;
   #define LWIP_PLATFORM_HTONL(x) __REV(x)
 #endif
 
-/* Optymalizuj czas działania - nie używaj asercji. */
+/**
+ * Do not use asserts.
+ */
 #define LWIP_PLATFORM_DIAG(x) ((void)0)
 #define LWIP_PLATFORM_ASSERT(x) ((void)0)
-/* Oryginalnie było tak
-#define LWIP_PLATFORM_ASSERT(x) do { if(!(x)) while(1); } while(0)
-*/
 
-/* Jeśli w lwiopts.h zdefiniowano opcję SYS_LIGHTWEIGHT_PROT == 1,
-   trzeba też zdefiniować makra chroniące dostępy do pamięci. Makra
-   te pojawiają się w funkcjach memp_free, memp_malloc, pbuf_ref,
-   pbuf_free oraz gdy zdefiniowano MEM_LIBC_MALLOC == 0, to również
-   w mem_realloc i mem_free, choć wtedy między wystąpieniami
-   SYS_ARCH_PROTECT i SYS_ARCH_UNPROTECT nie ma żadnego kodu. */
+/**
+ *  If SYS_LIGHTWEIGHT_PROT == 1 must define memory protection macros. They
+ * are used in memp_free, memp_malloc, pbuf_ref, pbuf_free and if MEM_LIBC_MALLOC == 0,
+ * in mem_realloc and mem_free functions.
+ */
 #if defined __GNUC__
   #define SYS_ARCH_DECL_PROTECT(x)                \
     u32_t x
@@ -107,9 +105,10 @@ typedef u32_t    mem_ptr_t;
 #define SET_IRQ_PROTECTION()                            \
   NVIC_SetPriorityGrouping(7 - PREEMPTION_PRIORITY_BITS)
 
-/* Definiujemy własne makro, gdyż funkcja NVIC_SetPriority
-   z biblioteki CMSIS nie uwzględnia zmienionej liczby bitów
-   priorytetu i podpriorytetu. */
+/**
+ *  Definition of SET_PRIORITY macro becouse NVIC_SetPriority
+ * does not take into account vary bitsamount in priority and subpriority
+ */
 #define SET_PRIORITY(irq, prio, subprio)           \
   NVIC_SetPriority((irq), (subprio) | ((prio) <<   \
     (__NVIC_PRIO_BITS - PREEMPTION_PRIORITY_BITS)))
@@ -183,5 +182,14 @@ static __INLINE void *protected_realloc(void *ptr, size_t size) {
   SYS_ARCH_UNPROTECT(v);
   return ret;
 }
+
+//void protected_free(void *ptr);
+//
+//void *protected_calloc(size_t nmemb, size_t size);
+//
+//void *protected_malloc(size_t size);
+//
+//void *protected_realloc(void *ptr, size_t size);
+
 
 #endif

@@ -92,9 +92,9 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p) {
 		}
 	}
 
-	printf("Writing len=%d\n", p->tot_len);
+//	printf("Writing len=%d\n", p->tot_len);
 
-	// Initialize transmit pointer
+// Initialize transmit pointer
 	enc28j60CtrlRegWrite(EWRPTL, TXSTART_INIT & 0xFF);
 	enc28j60CtrlRegWrite(EWRPTH, TXSTART_INIT >> 8);
 
@@ -111,10 +111,10 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p) {
 		 variable. */
 		// Write data to buffor
 		enc28j60WriteBuffer(q->payload, q->len);
-		printf("writing\n");
+//		printf("writing\n");
 	}
 
-	printf("send\n");
+//	printf("send\n");
 	enc28j60WriteOp(ENC28J60_BIT_FIELD_SET, ECON1, ECON1_TXRTS);
 	return ERR_OK;
 }
@@ -157,7 +157,7 @@ low_level_input(struct netif *netif) {
 	len = enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0);
 	len |= enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0) << 8;
 
-	printf("len=%d\n", len);
+//	printf("len=%d\n", len);
 
 	struct pbuf *p, *q;
 
@@ -186,10 +186,21 @@ low_level_input(struct netif *netif) {
 			}
 		}
 	}
+
+	if (enc28j60spi.nextPacketPointer - 1 < RXSTART_INIT
+			|| enc28j60spi.nextPacketPointer - 1 > RXSTOP_INIT) {
+		enc28j60CtrlRegWrite(ERXRDPTL, RXSTOP_INIT & 0xFF);
+		enc28j60CtrlRegWrite(ERXRDPTH, RXSTOP_INIT >> 8);
+	} else {
+		enc28j60CtrlRegWrite(ERXRDPTL, (enc28j60spi.nextPacketPointer - 1));
+		enc28j60CtrlRegWrite(ERXRDPTH,
+				(enc28j60spi.nextPacketPointer - 1) >> 8);
+	}
+
 	// Move the RX read pointer to the start of the next received packet
 	// This frees the memory we just read out
-	enc28j60CtrlRegWrite(ERXRDPTL, (enc28j60spi.nextPacketPointer));
-	enc28j60CtrlRegWrite(ERXRDPTH, (enc28j60spi.nextPacketPointer) >> 8);
+//	enc28j60CtrlRegWrite(ERXRDPTL, (enc28j60spi.nextPacketPointer));
+//	enc28j60CtrlRegWrite(ERXRDPTH, (enc28j60spi.nextPacketPointer) >> 8);
 
 	// decrement the packet counter indicate we are done with this packet
 	enc28j60WriteOp(ENC28J60_BIT_FIELD_SET, ECON2, ECON2_PKTDEC);

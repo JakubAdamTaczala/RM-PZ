@@ -37,24 +37,20 @@
  */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32f4xx_hal.h"
+#include "stm32l4xx_hal.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-#include "../Servers/udpecho_raw/udpecho_raw.h"
-#include "main_module_radio.h"
-#include "global_def.h"
-#include "enc28j60.h"
-#include <stdlib.h>
+#include "hand_module_radio.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint8_t dataOut[32], dataIn[32];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,26 +62,7 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-uint8_t buffer[1000];
-uint16_t length;
-
-uint8_t RADIO_INT = 0;
-uint8_t ETH_INT = 0;
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == RADIO_INT_Pin) {
-		RADIO_INT = 1;
-#if ENABLE_DEBUG
-		printf("RADIO_INT++\r\n");
-#endif
-	} else if (GPIO_Pin == ETH_INT_Pin) {
-		ETH_INT += 1;
-#if ENABLE_DEBUG
-		printf("ETH_INT++\r\n");
-#endif
-	}
-//	ethernetif_input(&networkInterface);
-}
+uint8_t dataOut[32], dataIn[32];
 /* USER CODE END 0 */
 
 /**
@@ -116,67 +93,24 @@ int main(void) {
 
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
-	MX_SPI1_Init();
-	MX_SPI2_Init();
-	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
+	MX_SPI1_Init();
 	/* USER CODE BEGIN 2 */
 
-	//initialize RADIO
-	mainModuleRadioInit();
-
-#if TCP_ECHO_SERVER
-	tcpecho_raw_init();
-#else
-	udpecho_raw_init();
-#endif
+	handModuleRadioInit();
 
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
-		if (ETH_INT >= 1) {
-#if ENABLE_DEBUG
-			printf("ETH_INT poll\r\n");
-#endif
-			udpecho_poll();
-			ETH_INT -= 1;
-			buffer[length] = '\0';
-			printf("length = %d\r\n", (int) length);
-			printf("received = %s\r\n", buffer);
-			printf("forward data to hand\r\n");
-
-//			sprintf((char *) dataOut, "abcdefghijklmnoszxABCDEFCBDA");
-
-			TM_NRF24L01_Transmit(buffer);
-			TM_NRF24L01_Transmit_Status_t transmissionStatus;
-			do {
-				transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
-			} while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
-
-			HAL_Delay(100);
-
-			transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
-
-			if (transmissionStatus == TM_NRF24L01_Transmit_Status_Ok) {
-				/* Transmit went OK */
-				printf(": OK\r\n");
-			} else if (transmissionStatus == TM_NRF24L01_Transmit_Status_Lost) {
-				/* Message was LOST */
-				printf(": LOST\r\n");
-			} else {
-				/* This should never happen */
-				printf(": SENDING\n");
-			}
-
-			TM_NRF24L01_PowerUpRx();
-			HAL_Delay(1000);
-
+		if (TM_NRF24L01_DataReady()) {
+			/* Get data from NRF24L01+ */
+			TM_NRF24L01_GetData(dataIn);
+			printf("RADIO\r\n");
+			printf("Received data: %s\r\n", dataIn);
 		}
-		if (RADIO_INT == 1) {
-			RADIO_INT = 0;
-		}
+		HAL_Delay(1000);
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
@@ -194,25 +128,21 @@ void SystemClock_Config(void) {
 
 	RCC_OscInitTypeDef RCC_OscInitStruct;
 	RCC_ClkInitTypeDef RCC_ClkInitStruct;
-
-	/**Configure the main internal regulator output voltage
-	 */
-	__HAL_RCC_PWR_CLK_ENABLE()
-	;
-
-	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+	RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
 	/**Initializes the CPU, AHB and APB busses clocks
 	 */
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-	RCC_OscInitStruct.HSICalibrationValue = 16;
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+	RCC_OscInitStruct.MSIState = RCC_MSI_ON;
+	RCC_OscInitStruct.MSICalibrationValue = 0;
+	RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-	RCC_OscInitStruct.PLL.PLLM = 8;
-	RCC_OscInitStruct.PLL.PLLN = 100;
-	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-	RCC_OscInitStruct.PLL.PLLQ = 4;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
+	RCC_OscInitStruct.PLL.PLLM = 1;
+	RCC_OscInitStruct.PLL.PLLN = 40;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;
+	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
 	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
@@ -223,10 +153,23 @@ void SystemClock_Config(void) {
 			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK) {
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
+	}
+
+	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+	PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
+	}
+
+	/**Configure the main internal regulator output voltage
+	 */
+	if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1)
+			!= HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 

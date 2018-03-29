@@ -59,10 +59,16 @@
 static struct udp_pcb *udpecho_raw_pcb;
 struct netif networkInterface;
 
+extern uint16_t length;
+extern uint8_t buffer[1000];
+
 static void udpecho_raw_recv(void *arg, struct udp_pcb *upcb, struct pbuf *p,
 		const ip_addr_t *addr, u16_t port) {
 	LWIP_UNUSED_ARG(arg);
 	if (p != NULL) {
+		//save data into buffer
+		length = 0;
+		length = pbuf_copy_partial(p, buffer, 1000, 0);
 		/* send received packet back to sender */
 		udp_sendto(upcb, p, addr, port);
 		/* free the pbuf */
@@ -72,15 +78,15 @@ static void udpecho_raw_recv(void *arg, struct udp_pcb *upcb, struct pbuf *p,
 
 void udpecho_raw_init(void) {
 	struct ip4_addr myIp, netmask, gw;
-	IP4_ADDR(&myIp, 192,168,0,33);
-	IP4_ADDR(&netmask, 255,255,255,0);
-	IP4_ADDR(&gw, 192,168,0,1);
+	IP4_ADDR(&myIp, 192, 168, 0, 33);
+	IP4_ADDR(&netmask, 255, 255, 255, 0);
+	IP4_ADDR(&gw, 192, 168, 0, 1);
 
 	uint16_t port = 8080;
 
 	lwip_init();
-	netif_add(&networkInterface, &myIp, &netmask, &gw, NULL, enc28j60_netif_init,
-			ethernet_input);
+	netif_add(&networkInterface, &myIp, &netmask, &gw, NULL,
+			enc28j60_netif_init, ethernet_input);
 	netif_set_up(&networkInterface);
 	udpecho_raw_pcb = udp_new();
 	if (udpecho_raw_pcb != NULL) {
@@ -96,13 +102,12 @@ void udpecho_raw_init(void) {
 	}
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	ethernetif_input(&networkInterface);
-}
+//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+//{
+//	ethernetif_input(&networkInterface);
+//}
 
-void udpecho_poll()
-{
+void udpecho_poll() {
 	ethernetif_input(&networkInterface);
 }
 

@@ -48,6 +48,9 @@
 #include "global_def.h"
 #include "enc28j60.h"
 #include <stdlib.h>
+#include "lwip/pbuf.h"
+#include "lwip/ip4_addr.h"
+#include "lwip/udp.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -86,6 +89,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}
 //	ethernetif_input(&networkInterface);
 }
+
+extern struct udp_pcb *udpecho_raw_pcb;
 /* USER CODE END 0 */
 
 /**
@@ -155,7 +160,7 @@ int main(void) {
 				transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
 			} while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
 
-			HAL_Delay(100);
+//			HAL_Delay(100);
 
 			transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
 
@@ -171,12 +176,26 @@ int main(void) {
 			}
 
 			TM_NRF24L01_PowerUpRx();
-			HAL_Delay(1000);
-
 		}
 		if (RADIO_INT == 1) {
 			RADIO_INT = 0;
 		}
+
+		if (TM_NRF24L01_DataReady()) {
+			/* Get data from NRF24L01+ */
+			TM_NRF24L01_GetData(dataIn);
+			printf("RADIO to ethernet\r\n");
+			printf("Received data: %s\r\n", dataIn);
+
+			struct pbuf* p = pbuf_alloc(PBUF_TRANSPORT, 32, PBUF_RAM);
+			pbuf_take(p, dataIn, 32);
+			struct ip4_addr myIp;
+			IP4_ADDR(&myIp, 192, 168, 0, 2);
+
+			udp_sendto(udpecho_raw_pcb, p, &myIp, 50871);
+			pbuf_free(p);
+		}
+
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

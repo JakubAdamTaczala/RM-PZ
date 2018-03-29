@@ -56,7 +56,7 @@
 
 #if LWIP_UDP
 
-static struct udp_pcb *udpecho_raw_pcb;
+struct udp_pcb *udpecho_raw_pcb;
 struct netif networkInterface;
 
 extern uint16_t length;

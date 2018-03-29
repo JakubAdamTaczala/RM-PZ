@@ -44,6 +44,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "hand_module_radio.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -109,8 +110,34 @@ int main(void) {
 			TM_NRF24L01_GetData(dataIn);
 			printf("RADIO\r\n");
 			printf("Received data: %s\r\n", dataIn);
+			char buff[32];
+//			strcat(buff, "Odsylam ");
+//			strcat(buff, dataIn);
+
+			printf("odsylam dane\r\n");
+			TM_NRF24L01_Transmit(dataIn);
+			TM_NRF24L01_Transmit_Status_t transmissionStatus;
+			do {
+				transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+			} while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
+
+			HAL_Delay(100);
+
+			transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+
+			if (transmissionStatus == TM_NRF24L01_Transmit_Status_Ok) {
+				/* Transmit went OK */
+				printf(": OK\r\n");
+			} else if (transmissionStatus == TM_NRF24L01_Transmit_Status_Lost) {
+				/* Message was LOST */
+				printf(": LOST\r\n");
+			} else {
+				/* This should never happen */
+				printf(": SENDING\n");
+			}
+
+			TM_NRF24L01_PowerUpRx();
 		}
-		HAL_Delay(1000);
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

@@ -45,7 +45,9 @@
 /* USER CODE BEGIN Includes */
 #include "../Servers/udpecho_raw/udpecho_raw.h"
 #include "enc28j60.h"
+#include "tm_stm32f4_nrf24l01.h"
 #include <stdlib.h>
+#include "hand_module_radio.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -100,21 +102,52 @@ int main(void) {
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
 	/* USER CODE BEGIN 2 */
+	handModuleRadioInit();
+	uint8_t dataOut[32], dataIn[32];
+	TM_NRF24L01_Transmit_Status_t transmissionStatus;
 
-//	enc28j60Init(&hspi1, ETH_CS_GPIO_Port, ETH_CS_Pin);
 
-#if TCP_ECHO_SERVER
-	tcpecho_raw_init();
-#else
-	udpecho_raw_init();
-#endif
-
+	uint8_t isConnection = 0;
+	uint8_t data = 0;
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
+		if (TM_NRF24L01_DataReady()) {
+			/* Get data from NRF24L01+ */
+			TM_NRF24L01_GetData(dataIn);
+			printf("data received: %s", dataIn);
 
+			if(dataIn[0] == 'a')
+			{
+				isConnection = 1;
+			}
+			else if(dataIn[0] == 's')
+			{
+				isConnection = 0;
+			}
+			/* Send it back, automatically goes to TX mode */
+//			TM_NRF24L01_Transmit(dataIn);
+//
+//			/* Wait for data to be sent */
+//			do {
+//				transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+//			} while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
+
+			/* Go back to RX Mode */
+			TM_NRF24L01_PowerUpRx();
+		}
+		if(isConnection == 1)
+		{
+			sprintf(dataOut, "New data: %d", data);
+			TM_NRF24L01_Transmit(dataOut);
+
+			data++;
+			HAL_Delay(10);
+			isConnection = 0;
+			TM_NRF24L01_PowerUpRx();
+		}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

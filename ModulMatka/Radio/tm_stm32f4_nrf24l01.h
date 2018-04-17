@@ -209,6 +209,8 @@ typedef enum {
 #define NRF24L01_IRQ_TRAN_OK        0x20 /*!< Transmission went OK */
 #define NRF24L01_IRQ_MAX_RT         0x10 /*!< Max retransmissions reached, last transmission failed */
 
+uint8_t TM_NRF24L01_ReadRegister(uint8_t reg);
+
 /**
  * @}
  */

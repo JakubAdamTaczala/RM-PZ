@@ -34,6 +34,17 @@
 #ifndef LWIP_UDPECHO_RAW_H
 #define LWIP_UDPECHO_RAW_H
 
+#include "ip_addr.h"
+
+typedef struct
+{
+	uint8_t buffer[32];
+	uint16_t len;
+	struct ip4_addr addr;
+	uint16_t port;
+} CommunicationStatus;
+
+
 void udpecho_raw_init(void);
 
 void udpecho_poll();

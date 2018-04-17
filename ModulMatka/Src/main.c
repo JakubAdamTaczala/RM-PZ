@@ -106,7 +106,6 @@ int main(void) {
 	uint8_t dataOut[32], dataIn[32];
 	TM_NRF24L01_Transmit_Status_t transmissionStatus;
 
-
 	uint8_t isConnection = 0;
 	uint8_t data = 0;
 	/* USER CODE END 2 */
@@ -117,35 +116,24 @@ int main(void) {
 		if (TM_NRF24L01_DataReady()) {
 			/* Get data from NRF24L01+ */
 			TM_NRF24L01_GetData(dataIn);
-			printf("data received: %s", dataIn);
+//			printf("data received: %s", dataIn);
 
-			if(dataIn[0] == 'a')
-			{
+			if (dataIn[0] == 'a') {
 				isConnection = 1;
-			}
-			else if(dataIn[0] == 's')
-			{
+			} else if (dataIn[0] == 's') {
 				isConnection = 0;
 			}
-			/* Send it back, automatically goes to TX mode */
-//			TM_NRF24L01_Transmit(dataIn);
-//
-//			/* Wait for data to be sent */
-//			do {
-//				transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
-//			} while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
-
-			/* Go back to RX Mode */
-			TM_NRF24L01_PowerUpRx();
 		}
-		if(isConnection == 1)
-		{
-			sprintf(dataOut, "New data: %d", data);
+		if (isConnection == 1) {
+			sprintf((char*)dataOut, "New data: %d", data);
 			TM_NRF24L01_Transmit(dataOut);
-
+			/* Wait for data to be sent */
+			do {
+				transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+			} while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
 			data++;
-			HAL_Delay(10);
 			isConnection = 0;
+			/* Go back to RX Mode */
 			TM_NRF24L01_PowerUpRx();
 		}
 		/* USER CODE END WHILE */

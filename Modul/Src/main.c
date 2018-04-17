@@ -49,7 +49,7 @@
 #include "global_def.h"
 
 extern int ETH_INT;
-extern uint8_t buffer[32];
+extern CommunicationStatus communication;
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -106,7 +106,8 @@ int main(void) {
 
 	udpecho_raw_init();
 	mainModuleRadioInit();
-	uint8_t dataOut[32], dataIn[32];
+	TM_NRF24L01_Transmit_Status_t transmissionStatus;
+	uint8_t dataIn[32];
 
 	/* USER CODE END 2 */
 
@@ -117,53 +118,22 @@ int main(void) {
 			udpecho_poll();
 			ETH_INT--;
 
-			printf("PETLA\r\n");
-			TM_NRF24L01_Transmit_Status_t transmissionStatus;
-			sprintf((char *) dataOut, "abcdefghijklmnoszxABCDEFCBDA");
-
-			TM_NRF24L01_Transmit(buffer);
+			TM_NRF24L01_Transmit(communication.buffer);
 
 			/* Turn on led to indicate sending */
 			/* Wait for data to be sent */
 			do {
 				transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
 			} while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
-			/* Turn off led */
 			/* Go back to RX mode */
 			TM_NRF24L01_PowerUpRx();
-
-			/* Wait received data, wait max 100ms, if time is larger, then data were probably lost */
-//			for (uint8_t i = 0; !TM_NRF24L01_DataReady() && i < 10; i++) {
-//				printf("waiting\r\n");
-//				HAL_Delay(10);
-//			}
-//			/* Get data from NRF2L01+ */
-//			TM_NRF24L01_GetData(dataIn);
-
-			/* Check transmit status */
-			if (transmissionStatus == TM_NRF24L01_Transmit_Status_Ok) {
-				/* Transmit went OK */
-				printf(": OK\r\n");
-			} else if (transmissionStatus == TM_NRF24L01_Transmit_Status_Lost) {
-				/* Message was LOST */
-				printf(": LOST\r\n");
-			} else {
-				/* This should never happen */
-				printf(": SENDING\r\n");
-			}
 		}
 
 		if (TM_NRF24L01_DataReady()) {
 			/* Get data from NRF24L01+ */
 			TM_NRF24L01_GetData(dataIn);
-
 			send_udp(dataIn, 32);
-
-
-			TM_NRF24L01_PowerUpRx();
 		}
-
-//		HAL_Delay(1000);
 
 		/* USER CODE END WHILE */
 

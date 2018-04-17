@@ -57,33 +57,32 @@
 
 #if LWIP_UDP
 
-extern uint8_t buffer[32];
 static struct udp_pcb *udpecho_raw_pcb;
-struct netif networkInterface;
-uint16_t portA = 0;
+static struct netif networkInterface;
+
+CommunicationStatus communication;
 
 static void udpecho_raw_recv(void *arg, struct udp_pcb *upcb, struct pbuf *p,
 		const ip_addr_t *addr, u16_t port) {
 	LWIP_UNUSED_ARG(arg);
 	if (p != NULL) {
-		portA = port;
-		memcpy(buffer, p->payload, p->len);
+		communication.addr = *addr;
+		communication.port = port;
+		communication.len = p->len;
+		memcpy(communication.buffer, p->payload, p->len);
 
 		/* send received packet back to sender */
-		udp_sendto(upcb, p, addr, port);
+		//		udp_sendto(upcb, p, addr, port);
 		/* free the pbuf */
 		pbuf_free(p);
 	}
 }
 
 void send_udp(uint8_t* data, uint8_t len) {
-	struct ip4_addr addr;
-	struct pbuf* p;
-	p = pbuf_alloc(PBUF_TRANSPORT, len, PBUF_RAM);
-	IP4_ADDR(&addr, 192, 168, 0, 20);
+	struct pbuf* p = pbuf_alloc(PBUF_TRANSPORT, len, PBUF_RAM);
 	memcpy(p->payload, data, len);
 	/* send received packet back to sender */
-	udp_sendto(udpecho_raw_pcb, p, &addr,  portA);
+	udp_sendto(udpecho_raw_pcb, p, &(communication.addr),  communication.port);
 	pbuf_free(p);
 }
 
@@ -92,7 +91,6 @@ void udpecho_raw_init(void) {
 	IP4_ADDR(&myIp, 192, 168, 0, 33);
 	IP4_ADDR(&netmask, 255, 255, 255, 0);
 	IP4_ADDR(&gw, 192, 168, 0, 1);
-
 	uint16_t port = 8080;
 
 	lwip_init();
@@ -112,11 +110,6 @@ void udpecho_raw_init(void) {
 		/* abort? output diagnostic? */
 	}
 }
-
-//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-//{
-//	ethernetif_input(&networkInterface);
-//}
 
 void udpecho_poll() {
 	ethernetif_input(&networkInterface);

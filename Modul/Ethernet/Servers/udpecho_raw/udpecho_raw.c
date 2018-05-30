@@ -72,7 +72,7 @@ static void udpecho_raw_recv(void *arg, struct udp_pcb *upcb, struct pbuf *p,
 		memcpy(communication.buffer, p->payload, p->len);
 
 		/* send received packet back to sender */
-		//		udp_sendto(upcb, p, addr, port);
+		udp_sendto(upcb, p, addr, port);
 		/* free the pbuf */
 		pbuf_free(p);
 	}

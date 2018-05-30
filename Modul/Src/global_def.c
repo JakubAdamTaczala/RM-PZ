@@ -31,7 +31,6 @@ uint8_t buffer[32];
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (ETH_INT_Pin == GPIO_Pin) {
-//		ethernetif_input(&networkInterface);
 		ETH_INT ++;
 	}
 }

@@ -34,10 +34,11 @@
 #ifndef LWIP_UDPECHO_RAW_H
 #define LWIP_UDPECHO_RAW_H
 
-#include "ip_addr.h"
+#include "ip4_addr.h"
 
 typedef struct
 {
+	uint8_t status;
 	uint8_t buffer[32];
 	uint16_t len;
 	struct ip4_addr addr;

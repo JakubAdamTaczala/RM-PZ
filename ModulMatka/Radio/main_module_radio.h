@@ -1,5 +1,5 @@
 /*
- * hand_module_radio.h
+ * main_module_radio.h
  *
  *  Created on: 29.03.2018
  *      Author: Piotr Gogola
@@ -10,7 +10,7 @@
 
 #include "tm_stm32f4_nrf24l01.h"
 
-//void handModuleRadioInit();
+void mainModuleRadioInit();
 
 
 

@@ -1,14 +1,23 @@
 #MicroXplorer Configuration settings - do not modify
-ADC.ClockPrescaler=ADC_CLOCK_SYNC_PCLK_DIV4
+ADC.ClockPrescaler=ADC_CLOCK_SYNC_PCLK_DIV2
 ADC.ContinuousConvMode=ENABLE
 ADC.DMAContinuousRequests=ENABLE
+ADC.DataAlign=ADC_DATAALIGN_RIGHT
+ADC.DiscontinuousConvMode=DISABLE
 ADC.EOCSelection=ADC_EOC_SEQ_CONV
-ADC.IPParameters=Resolution,ContinuousConvMode,DMAContinuousRequests,EOCSelection,ClockPrescaler,Overrun
+ADC.EnableAnalogWatchDog=false
+ADC.ExternalTrigConv=ADC_SOFTWARE_START
+ADC.ExternalTrigConvEdge=ADC_EXTERNALTRIGCONVEDGE_NONE
+ADC.IPParameters=Resolution,ContinuousConvMode,DMAContinuousRequests,EOCSelection,ClockPrescaler,Overrun,DataAlign,ScanConvMode,DiscontinuousConvMode,LowPowerAutoWait,LowPowerAutoPowerOff,SamplingTime,ExternalTrigConv,ExternalTrigConvEdge,EnableAnalogWatchDog
+ADC.LowPowerAutoPowerOff=DISABLE
+ADC.LowPowerAutoWait=DISABLE
 ADC.Overrun=ADC_OVR_DATA_OVERWRITTEN
-ADC.Resolution=ADC_RESOLUTION_8B
+ADC.Resolution=ADC_RESOLUTION_12B
+ADC.SamplingTime=ADC_SAMPLETIME_7CYCLES_5
+ADC.ScanConvMode=ADC_SCAN_DIRECTION_FORWARD
 Dma.ADC.0.Direction=DMA_PERIPH_TO_MEMORY
 Dma.ADC.0.Instance=DMA1_Channel1
-Dma.ADC.0.MemDataAlignment=DMA_MDATAALIGN_BYTE
+Dma.ADC.0.MemDataAlignment=DMA_MDATAALIGN_HALFWORD
 Dma.ADC.0.MemInc=DMA_MINC_ENABLE
 Dma.ADC.0.Mode=DMA_CIRCULAR
 Dma.ADC.0.PeriphDataAlignment=DMA_PDATAALIGN_HALFWORD

@@ -53,7 +53,12 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-	uint8_t ADC_Value[14];
+	uint16_t ADC_Value[14];
+	uint8_t dataToSend[14];
+
+#define MAX_8BIT 256.0f
+#define MAX_12BIT 4096
+#define HALF_OF_12 2098
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -131,8 +136,26 @@ int main(void)
 			}
 		}
 		if (isConnection == 1) {
+			dataToSend[0] = ADC_Value[0]/16;
+			dataToSend[1] = ADC_Value[1]/16;
+			dataToSend[2] = ADC_Value[2]/16;
+			dataToSend[3] = ADC_Value[3]/16;
+			dataToSend[4] = ADC_Value[4]/16;
+			dataToSend[5] = ADC_Value[5]/16;
+			dataToSend[6] = ADC_Value[6]/16;
+			dataToSend[7] = ADC_Value[7]/16;
+			dataToSend[8] = ADC_Value[8]/16;
+			dataToSend[9] = ADC_Value[9]/16;
+			dataToSend[10] = ADC_Value[10]/16;
+			dataToSend[11] = ADC_Value[11]/16;
+			dataToSend[12] = ADC_Value[12]/16;
+			dataToSend[13] = ADC_Value[13]/16;
+
+
+
+
 //			sprintf(dataOut, "New data: %d", ADC_Value[6]);
-			TM_NRF24L01_Transmit(ADC_Value);
+			TM_NRF24L01_Transmit(dataToSend);
 			/* Wait for data to be sent */
 			do {
 				transmissionStatus = TM_NRF24L01_GetTransmissionStatus();

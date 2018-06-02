@@ -5,6 +5,7 @@
 #include <QUdpSocket>
 #include <QProgressBar>
 #include <QLabel>
+#include <QPainter>
 namespace Ui {
 class MainWindow;
 }

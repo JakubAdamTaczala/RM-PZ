@@ -6,7 +6,7 @@
 
 QT       += core gui network
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets gui
 
 TARGET = KlientEthernet
 TEMPLATE = app
@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    opcjepomiarow.cpp
+    opcjepomiarow.cpp \
+    rotate.cpp
 
 HEADERS += \
         mainwindow.h \
-    opcjepomiarow.h
+    opcjepomiarow.h \
+    rotate.h
 
 FORMS += \
         mainwindow.ui \

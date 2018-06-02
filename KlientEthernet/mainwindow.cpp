@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "opcjepomiarow.h"
 #include "ui_mainwindow.h"
 
 #include <QNetworkDatagram>
@@ -32,6 +33,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->statusBar->addWidget(timeLabel);
     communicationOn = false;
 
+
+    fingerSettings = /*new */QVector<Finger>(5);
+
+    connect(ui->actionUstawienia_pomiar_w, &QAction::triggered,
+            [=](){
+        OpcjePomiarow pomiary(fingerSettings);
+        if(0==pomiary.exec())
+        {
+            for(int i = 0; i<5; i++)
+            {
+                progressBars.at(2*i)->setMaximum(fingerSettings.at(i).maxPressure);
+                progressBars.at(2*i)->setMinimum(fingerSettings.at(i).minPressure);
+                progressBars.at(2*i+1)->setMaximum(fingerSettings.at(i).maxTensure);
+                progressBars.at(2*i+1)->setMinimum(fingerSettings.at(i).minTensure);
+            }
+        }
+    });
 }
 
 MainWindow::~MainWindow()
@@ -53,8 +71,8 @@ void MainWindow::printData(const QNetworkDatagram& network)
     uint16_t * data = (uint16_t*)network.data().data();
     if(!communicationOn && *((char*)data) == 's')
     {
-       setProgressBarToZero();
-       return;
+        setProgressBarToZero();
+        return;
     }
     qDebug() << "New data:";
     for(int i = 0 ;i <10; i++)

@@ -194,6 +194,20 @@
      <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuPlik">
+    <property name="title">
+     <string>Plik</string>
+    </property>
+    <addaction name="actionZapisz_pomiary"/>
+   </widget>
+   <widget class="QMenu" name="menuOpcje">
+    <property name="title">
+     <string>Opcje</string>
+    </property>
+    <addaction name="actionUstawienia_pomiar_w"/>
+   </widget>
+   <addaction name="menuPlik"/>
+   <addaction name="menuOpcje"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -204,6 +218,16 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionZapisz_pomiary">
+   <property name="text">
+    <string>Zapisz pomiary</string>
+   </property>
+  </action>
+  <action name="actionUstawienia_pomiar_w">
+   <property name="text">
+    <string>Ustawienia pomiarów</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

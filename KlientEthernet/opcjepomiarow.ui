@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OpcjePomiarow</class>
+ <widget class="QDialog" name="OpcjePomiarow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>742</width>
+    <height>483</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>410</y>
+     <width>240</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>110</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>110</width>
+      <height>30</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Anuluj</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>0</y>
+      <width>110</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>110</width>
+      <height>30</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Zachowaj</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>70</y>
+     <width>261</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Czujniki nacisku</string>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="3" column="1">
+     <widget class="QSpinBox" name="minN3">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="p3L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="n0L">
+      <property name="text">
+       <string>Palec 0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="n4L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="n2L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="n1L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QSpinBox" name="minN2">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QSpinBox" name="minN0">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QSpinBox" name="minN1">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QSpinBox" name="minN4">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QSpinBox" name="maxN0">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QSpinBox" name="maxN1">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QSpinBox" name="maxN2">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QSpinBox" name="maxN3">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QSpinBox" name="maxN4">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>70</y>
+     <width>261</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Czujniki zgiecia</string>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="3" column="1">
+     <widget class="QSpinBox" name="minZ3">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="z3L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="z0L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="z4L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="z2L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="z1L">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QSpinBox" name="minZ2">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QSpinBox" name="minZ0">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QSpinBox" name="minZ1">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QSpinBox" name="minZ4">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QSpinBox" name="maxZ0">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QSpinBox" name="maxZ1">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QSpinBox" name="maxZ2">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QSpinBox" name="maxZ3">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QSpinBox" name="maxZ4">
+      <property name="maximum">
+       <number>4096</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

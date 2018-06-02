@@ -9,6 +9,16 @@ namespace Ui {
 class MainWindow;
 }
 
+struct Finger
+{
+    int maxPressure;
+    int minPressure;
+    int maxTensure;
+    int minTensure;
+
+};
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -35,6 +45,9 @@ private:
     QHostAddress motherAddress;
 
     bool communicationOn;
+
+    QVector<Finger> fingerSettings;
+
 };
 
 #endif // MAINWINDOW_H

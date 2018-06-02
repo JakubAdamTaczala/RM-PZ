@@ -3,7 +3,7 @@
 
 #include <QNetworkDatagram>
 #include <QUdpSocket>
-
+#include <QTime>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -17,6 +17,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton, &QPushButton::released, this, &MainWindow::startConnection);
     connect(ui->pushButton_2, &QPushButton::released, this, &MainWindow::stopConnection);
     motherAddress.setAddress("192.168.0.33");
+    progressBars.append(ui->progressBara);
+    progressBars.append(ui->progressBarb);
+    progressBars.append(ui->progressBarc);
+    progressBars.append(ui->progressBard);
+    progressBars.append(ui->progressBare);
+    progressBars.append(ui->progressBarf);
+    progressBars.append(ui->progressBarg);
+    progressBars.append(ui->progressBarh);
+    progressBars.append(ui->progressBari);
+    progressBars.append(ui->progressBarj);
+
+    timeLabel = new QLabel(QTime::currentTime().toString("hh:mm:ss:zzz"), this);
+    ui->statusBar->addWidget(timeLabel);
+    communicationOn = false;
+
 }
 
 MainWindow::~MainWindow()
@@ -35,37 +50,56 @@ void MainWindow::receiveDatagram()
 
 void MainWindow::printData(const QNetworkDatagram& network)
 {
-    uint8_t * data = (uint8_t*)network.data().data();
+    uint16_t * data = (uint16_t*)network.data().data();
+    if(!communicationOn && *((char*)data) == 's')
+    {
+       setProgressBarToZero();
+       return;
+    }
     qDebug() << "New data:";
-    for(int i = 0 ;i <14; i++)
+    for(int i = 0 ;i <10; i++)
     {
         qDebug() <<  i << "  " <<  data[i];
     }
-    ui->progressBara->setValue(data[0]);
-    ui->progressBarb->setValue(data[1]);
-    ui->progressBarc->setValue(data[2]);
-    ui->progressBard->setValue(data[3]);
-    ui->progressBare->setValue(data[4]);
-    ui->progressBarf->setValue(data[5]);
-    ui->progressBarg->setValue(data[6]);
-    ui->progressBarh->setValue(data[7]);
-    ui->progressBari->setValue(data[8]);
-    ui->progressBarj->setValue(data[9]);
-    ui->progressBark->setValue(data[10]);
-    ui->progressBarl->setValue(data[11]);
-    ui->progressBarm->setValue(data[12]);
-    ui->progressBarn->setValue(data[13]);
+    const int MAX_12BIT = 4096;
+    for(int i = 0; i<10; i++)
+    {
+        if(1 == i%2)
+        {
+            progressBars.at(i)->setValue(MAX_12BIT - data[i]);
+        }
+        else
+        {
+            progressBars.at(i)->setValue(data[i]);
+        }
+    }
+    QString timeStr;
+    timeLabel->setText((timeStr = QTime::currentTime().toString("hh:mm:ss:zzz")));
 }
 
 void MainWindow::startConnection()
 {
     QByteArray array;
     array.append('a');
-    qDebug() << "send start " << udpSocket->writeDatagram(array, motherAddress, 8080);
+    if(udpSocket->writeDatagram(array, motherAddress, 8080))
+    {
+        communicationOn = true;
+    }
 }
 
 void MainWindow::stopConnection()
 {
     const char data = 's';
-    qDebug() << "send stop " << udpSocket->writeDatagram(&data, 1, motherAddress, 8080);
+    if(udpSocket->writeDatagram(&data, 1, motherAddress, 8080))
+    {
+        communicationOn = false;
+    }
+}
+
+void MainWindow::setProgressBarToZero()
+{
+    for(int i = 0 ; i < 10; i++)
+    {
+        progressBars.at(i)->setValue(0);
+    }
 }

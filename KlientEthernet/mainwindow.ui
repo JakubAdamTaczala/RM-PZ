@@ -34,11 +34,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QProgressBar" name="progressBara">
+         <property name="minimum">
+          <number>0</number>
+         </property>
          <property name="maximum">
-          <number>255</number>
+          <number>4096</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -48,10 +51,10 @@
        <item>
         <widget class="QProgressBar" name="progressBarb">
          <property name="maximum">
-          <number>255</number>
+          <number>2100</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -60,11 +63,14 @@
        </item>
        <item>
         <widget class="QProgressBar" name="progressBarc">
+         <property name="minimum">
+          <number>0</number>
+         </property>
          <property name="maximum">
-          <number>255</number>
+          <number>4096</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -74,10 +80,10 @@
        <item>
         <widget class="QProgressBar" name="progressBard">
          <property name="maximum">
-          <number>255</number>
+          <number>2100</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -87,10 +93,10 @@
        <item>
         <widget class="QProgressBar" name="progressBare">
          <property name="maximum">
-          <number>255</number>
+          <number>4096</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -99,11 +105,14 @@
        </item>
        <item>
         <widget class="QProgressBar" name="progressBarf">
+         <property name="minimum">
+          <number>0</number>
+         </property>
          <property name="maximum">
-          <number>255</number>
+          <number>2100</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -113,10 +122,10 @@
        <item>
         <widget class="QProgressBar" name="progressBarg">
          <property name="maximum">
-          <number>255</number>
+          <number>4096</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -125,11 +134,14 @@
        </item>
        <item>
         <widget class="QProgressBar" name="progressBarh">
+         <property name="minimum">
+          <number>0</number>
+         </property>
          <property name="maximum">
-          <number>255</number>
+          <number>2100</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -139,10 +151,13 @@
        <item>
         <widget class="QProgressBar" name="progressBari">
          <property name="maximum">
-          <number>255</number>
+          <number>4096</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
+         </property>
+         <property name="textVisible">
+          <bool>true</bool>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -152,62 +167,13 @@
        <item>
         <widget class="QProgressBar" name="progressBarj">
          <property name="maximum">
-          <number>255</number>
+          <number>2100</number>
          </property>
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="progressBark">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="value">
-          <number>24</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="progressBarl">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="value">
-          <number>24</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="progressBarm">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="value">
-          <number>24</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="progressBarn">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="value">
-          <number>24</number>
+         <property name="textVisible">
+          <bool>true</bool>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>

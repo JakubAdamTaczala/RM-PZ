@@ -24,6 +24,7 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "rotate.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -48,6 +49,18 @@ public:
     QProgressBar *progressBarh;
     QProgressBar *progressBari;
     QProgressBar *progressBarj;
+    QWidget *widget_2;
+    QHBoxLayout *horizontalLayout_2;
+    rotate *label_9;
+    rotate *label;
+    rotate *label_5;
+    rotate *label_8;
+    rotate *label_2;
+    rotate *label_6;
+    rotate *label_3;
+    rotate *label_10;
+    rotate *label_4;
+    rotate *label_7;
     QMenuBar *menuBar;
     QMenu *menuPlik;
     QMenu *menuOpcje;
@@ -58,7 +71,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(600, 615);
+        MainWindow->resize(1826, 612);
         actionZapisz_pomiary = new QAction(MainWindow);
         actionZapisz_pomiary->setObjectName(QStringLiteral("actionZapisz_pomiary"));
         actionUstawienia_pomiar_w = new QAction(MainWindow);
@@ -174,10 +187,87 @@ public:
 
         verticalLayout->addWidget(widget);
 
+        widget_2 = new QWidget(centralWidget);
+        widget_2->setObjectName(QStringLiteral("widget_2"));
+        horizontalLayout_2 = new QHBoxLayout(widget_2);
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        label_9 = new rotate(widget_2);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label_9);
+
+        label = new rotate(widget_2);
+        label->setObjectName(QStringLiteral("label"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy);
+        label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label);
+
+        label_5 = new rotate(widget_2);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label_5);
+
+        label_8 = new rotate(widget_2);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label_8);
+
+        label_2 = new rotate(widget_2);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label_2);
+
+        label_6 = new rotate(widget_2);
+        label_6->setObjectName(QStringLiteral("label_6"));
+        label_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label_6);
+
+        label_3 = new rotate(widget_2);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label_3);
+
+        label_10 = new rotate(widget_2);
+        label_10->setObjectName(QStringLiteral("label_10"));
+        sizePolicy.setHeightForWidth(label_10->sizePolicy().hasHeightForWidth());
+        label_10->setSizePolicy(sizePolicy);
+        label_10->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_10->setWordWrap(false);
+
+        horizontalLayout_2->addWidget(label_10);
+
+        label_4 = new rotate(widget_2);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label_4);
+
+        label_7 = new rotate(widget_2);
+        label_7->setObjectName(QStringLiteral("label_7"));
+        label_7->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_2->addWidget(label_7);
+
+
+        verticalLayout->addWidget(widget_2);
+
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 600, 26));
+        menuBar->setGeometry(QRect(0, 0, 1826, 26));
         menuPlik = new QMenu(menuBar);
         menuPlik->setObjectName(QStringLiteral("menuPlik"));
         menuOpcje = new QMenu(menuBar);
@@ -207,6 +297,16 @@ public:
         actionUstawienia_pomiar_w->setText(QApplication::translate("MainWindow", "Ustawienia pomiar\303\263w", Q_NULLPTR));
         pushButton->setText(QApplication::translate("MainWindow", "Start", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MainWindow", "Stop", Q_NULLPTR));
+        label_9->setText(QApplication::translate("MainWindow", "Kciuk - Czujnik nacisku", Q_NULLPTR));
+        label->setText(QApplication::translate("MainWindow", "Kciuk - Czujnik zgi\304\231cia", Q_NULLPTR));
+        label_5->setText(QApplication::translate("MainWindow", "Palec wskazuj\304\205cy - Czujnik nacisku", Q_NULLPTR));
+        label_8->setText(QApplication::translate("MainWindow", "Palec wskazuj\304\205cy - Czujnik zgi\304\231cia", Q_NULLPTR));
+        label_2->setText(QApplication::translate("MainWindow", "Palec \305\233rodkowy - Czujnik nacisku", Q_NULLPTR));
+        label_6->setText(QApplication::translate("MainWindow", "Palec \305\233rodkowy - Czujnik zgi\304\231cia", Q_NULLPTR));
+        label_3->setText(QApplication::translate("MainWindow", "Palec serdeczny - Czujnik nacisku", Q_NULLPTR));
+        label_10->setText(QApplication::translate("MainWindow", "Palec serdeczny - Czujnik zgi\304\231cia", Q_NULLPTR));
+        label_4->setText(QApplication::translate("MainWindow", "Ma\305\202y palec - Czujnik nacisku", Q_NULLPTR));
+        label_7->setText(QApplication::translate("MainWindow", "Ma\305\202y palec - czujnik zgi\304\231cia", Q_NULLPTR));
         menuPlik->setTitle(QApplication::translate("MainWindow", "Plik", Q_NULLPTR));
         menuOpcje->setTitle(QApplication::translate("MainWindow", "Opcje", Q_NULLPTR));
     } // retranslateUi

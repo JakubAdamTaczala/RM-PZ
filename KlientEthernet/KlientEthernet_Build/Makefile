@@ -210,6 +210,7 @@ Makefile: ../KlientEthernet.pro E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/win32-g++
 		E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/qt_config.prf \
 		E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/win32-g++/qmake.conf \
 		E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/exclusive_builds.prf \
 		E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/toolchain.prf \
 		E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/default_pre.prf \
@@ -388,6 +389,7 @@ E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/qt_functions.prf:
 E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/qt_config.prf:
 E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/win32-g++/qmake.conf:
 E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/spec_post.prf:
+.qmake.stash:
 E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/exclusive_builds.prf:
 E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/toolchain.prf:
 E:/Qt/Qt5.9.1/5.9.1/mingw53_32/mkspecs/features/default_pre.prf:
